@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAVE Originals | Brooklyn Sports Podcast Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#0a0a0a',
+                            dark: '#111111',
+                            accent: '#ff3b3b',
+                            neon: '#ccff00',
+                            gray: '#1a1a1a'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .text-stroke {
+            -webkit-text-stroke: 2px currentColor;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-stroke-white {
+            -webkit-text-stroke: 2px white;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .image-reveal {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            transition: clip-path 0.6s ease;
+        }
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .play-button {
+            transition: all 0.3s ease;
+        }
+        .play-button:hover {
+            transform: scale(1.1);
+            background-color: #ccff00;
+            color: black;
+        }
+        .show-card:hover .show-overlay {
+            opacity: 1;
+        }
+        .show-card:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-white antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="glass-panel border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-brand-neon rounded-full flex items-center justify-center">
+                            <span class="text-black font-black text-xl font-display">W</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-display font-bold text-2xl tracking-tighter">WAVE</span>
+                            <span class="text-[10px] tracking-[0.3em] text-gray-400 uppercase">Originals</span>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center gap-8">
+                        <a href="#shows" class="text-sm font-medium text-gray-300 hover:text-brand-neon transition-colors uppercase tracking-wider">Shows</a>
+                        <a href="#episodes" class="text-sm font-medium text-gray-300 hover:text-brand-neon transition-colors uppercase tracking-wider">Episodes</a>
+                        <a href="#hosts" class="text-sm font-medium text-gray-300 hover:text-brand-neon transition-colors uppercase tracking-wider">Hosts</a>
+                        <a href="#about" class="text-sm font-medium text-gray-300 hover:text-brand-neon transition-colors uppercase tracking-wider">About</a>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="flex items-center gap-4">
+                        <button class="hidden md:flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-brand-neon transition-colors">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Listen Now
+                        </button>
+                        <button class="md:hidden text-white" onclick="toggleMenu()">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-white/10">
+            <div class="px-6 py-4 space-y-4">
+                <a href="#shows" class="block text-lg font-medium text-gray-300">Shows</a>
+                <a href="#episodes" class="block text-lg font-medium text-gray-300">Episodes</a>
+                <a href="#hosts" class="block text-lg font-medium text-gray-300">Hosts</a>
+                <a href="#about" class="block text-lg font-medium text-gray-300">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1920&q=80" 
+                 alt="Brooklyn Bridge Night" 
+                 class="w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-b from-brand-black/80 via-brand-black/50 to-brand-black"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-black via-transparent to-transparent"></div>
+        </div>
+
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-neon/20 rounded-full blur-[128px] animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-brand-accent/20 rounded-full blur-[96px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 animate-float">
+                <span class="w-2 h-2 bg-brand-neon rounded-full animate-pulse"></span>
+                <span class="text-xs font-bold tracking-widest uppercase text-gray-300">Brooklyn's Voice in Sports</span>
+            </div>
+
+            <h1 class="font-display font-black text-6xl md:text-8xl lg:text-9xl tracking-tighter mb-6 leading-none">
+                <span class="block text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">WAVE</span>
+                <span class="block text-stroke-white text-5xl md:text-7xl lg:text-8xl mt-2">ORIGINALS</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-12 leading-relaxed">
+                The premier podcast network capturing the pulse of Brooklyn sports culture. 
+                Raw, authentic, and unapologetically New York.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button class="group flex items-center gap-3 bg-brand-neon text-black px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform">
+                    <i data-lucide="play-circle" class="w-6 h-6 fill-current"></i>
+                    Start Listening
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button class="flex items-center gap-3 glass-panel px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-colors">
+                    <i data-lucide="headphones" class="w-6 h-6"></i>
+                    Browse Shows
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-20 grid grid-cols-3 gap-8 max-w-3xl mx-auto border-t border-white/10 pt-12">
+                <div class="text-center">
+                    <div class="font-display font-bold text-4xl md:text-5xl text-brand-neon">12+</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mt-2">Original Shows</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-display font-bold text-4xl md:text-5xl text-brand-neon">2M+</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mt-2">Monthly Listens</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-display font-bold text-4xl md:text-5xl text-brand-neon">50+</div>
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mt-2">Host Team</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-8 h-8 text-white/50"></i>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <div class="bg-brand-neon text-black py-4 overflow-hidden">
+        <div class="marquee-container">
+            <div class="marquee-content font-display font-bold text-2xl tracking-tight">
+                <span class="mx-8">BROOKLYN NETS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">NEW YORK KNICKS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">YANKEES</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">METS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">GIANTS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">JETS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">ISLANDERS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">RANGERS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">BROOKLYN NETS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">NEW YORK KNICKS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">YANKEES</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">METS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">GIANTS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">JETS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">ISLANDERS</span>
+                <span class="mx-8">•</span>
+                <span class="mx-8">RANGERS</span>
+                <span class="mx-8">•</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Shows Section -->
+    <section id="shows" class="py-32 bg-brand-black relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <span class="text-brand-neon font-bold tracking-widest uppercase text-sm mb-4 block">The Lineup</span>
+                    <h2 class="font-display font-black text-5xl md:text-7xl tracking-tighter">FEATURED<br>SHOWS</h2>
+                </div>
+                <a href="#" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+                    View All Shows
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Shows Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Show Card 1 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" 
+                             alt="The Hoops History" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Basketball</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">THE HOOPS HISTORY</h3>
+                        <p class="text-gray-300 text-sm mb-4">Deep dives into NBA history with a Brooklyn perspective. Hosted by Marcus Chen.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">THE HOOPS HISTORY</h3>
+                    </div>
+                </div>
+
+                <!-- Show Card 2 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80" 
+                             alt="Game Day Podcast" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Football</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">GAME DAY</h3>
+                        <p class="text-gray-300 text-sm mb-4">NFL analysis that hits harder than a linebacker. Jets, Giants, and league-wide coverage.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">GAME DAY</h3>
+                    </div>
+                </div>
+
+                <!-- Show Card 3 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1461896836934- voices-of-sport?w=800&q=80" 
+                             alt="In N Out Sports" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Multi-Sport</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">IN N OUT</h3>
+                        <p class="text-gray-300 text-sm mb-4">Crossover conversations covering every major sport with unfiltered Brooklyn energy.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">IN N OUT</h3>
+                    </div>
+                </div>
+
+                <!-- Show Card 4 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80" 
+                             alt="Sports Podcast Daily" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Daily News</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">THE DAILY WAVE</h3>
+                        <p class="text-gray-300 text-sm mb-4">Your morning briefing on everything New York sports. 30 minutes, zero fluff.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">THE DAILY WAVE</h3>
+                    </div>
+                </div>
+
+                <!-- Show Card 5 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80" 
+                             alt="Soccer Podcast" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Soccer</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">PITCH SIDE</h3>
+                        <p class="text-gray-300 text-sm mb-4">NYCFC, Red Bulls, and global football culture from the streets of Brooklyn.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">PITCH SIDE</h3>
+                    </div>
+                </div>
+
+                <!-- Show Card 6 -->
+                <div class="show-card group relative overflow-hidden rounded-2xl cursor-pointer hover-lift bg-brand-gray">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&q=80" 
+                             alt="Studio Sessions" 
+                             class="w-full h-full object-cover transition-transform duration-700 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="show-overlay absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-brand-neon text-xs font-bold tracking-widest uppercase mb-2">Culture</span>
+                        <h3 class="font-display font-bold text-3xl mb-2">STUDIO SESSIONS</h3>
+                        <p class="text-gray-300 text-sm mb-4">Behind the scenes with athletes, artists, and influencers shaping sports culture.</p>
+                        <button class="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-bold w-fit">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            Latest Episode
+                        </button>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent group-hover:opacity-0 transition-opacity">
+                        <h3 class="font-display font-bold text-2xl">STUDIO SESSIONS</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Episodes Section -->
+    <section id="episodes" class="py-32 bg-brand-dark relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <span class="text-brand-accent font-bold tracking-widest uppercase text-sm mb-4 block">Fresh Drops</span>
+                    <h2 class="font-display font-black text-5xl md:text-7xl tracking-tighter">LATEST<br>EPISODES</h2>
+                </div>
+                <div class="flex gap-4">
+                    <button class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <button class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Episodes List -->
+            <div class="space-y-6">
+                <!-- Episode 1 -->
+                <div class="group glass-panel rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer border border-white/10 hover:border-brand-neon/50">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="relative w-full md:w-48 h-48 md:h-32 rounded-xl overflow-hidden flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&q=80" 
+                                 alt="Episode Cover" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center">
+                                    <i data-lucide="play" class="w-6 h-6 text-black fill-current"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex items-center gap-3 justify-center md:justify-start mb-2">
+                                <span class="text-brand-neon text-xs font-bold tracking-widest uppercase">The Hoops History</span>
+                                <span class="text-gray-600">•</span>
+                                <span class="text-gray-500 text-sm">2 days ago</span>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl md:text-3xl mb-2 group-hover:text-brand-neon transition-colors">Ep. 234: The Nets Dynasty That Never Was</h3>
+                            <p class="text-gray-400 line-clamp-2">An in-depth look at the Brooklyn Nets' superteam era, what went wrong, and what the future holds for the franchise.</p>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-500">
+                            <span class="flex items-center gap-2 text-sm">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                1:24:00
+                            </span>
+                            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Episode 2 -->
+                <div class="group glass-panel rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer border border-white/10 hover:border-brand-neon/50">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="relative w-full md:w-48 h-48 md:h-32 rounded-xl overflow-hidden flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&q=80" 
+                                 alt="Episode Cover" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center">
+                                    <i data-lucide="play" class="w-6 h-6 text-black fill-current"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex items-center gap-3 justify-center md:justify-start mb-2">
+                                <span class="text-brand-neon text-xs font-bold tracking-widest uppercase">Game Day</span>
+                                <span class="text-gray-600">•</span>
+                                <span class="text-gray-500 text-sm">3 days ago</span>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl md:text-3xl mb-2 group-hover:text-brand-neon transition-colors">Ep. 156: Jets Draft Preview with Special Guest</h3>
+                            <p class="text-gray-400 line-clamp-2">Former NFL scout breaks down the Jets' draft strategy and predicts their first-round moves.</p>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-500">
+                            <span class="flex items-center gap-2 text-sm">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                58:30
+                            </span>
+                            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Episode 3 -->
+                <div class="group glass-panel rounded-2xl p-6 hover:bg-white/5 transition-all cursor-pointer border border-white/10 hover:border-brand-neon/50">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="relative w-full md:w-48 h-48 md:h-32 rounded-xl overflow-hidden flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1461896836934- voices-of-sport?w=400&q=80" 
+                                 alt="Episode Cover" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center">
+                                    <i data-lucide="play" class="w-6 h-6 text-black fill-current"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex items-center gap-3 justify-center md:justify-start mb-2">
+                                <span class="text-brand-neon text-xs font-bold tracking-widest uppercase">In N Out</span>
+                                <span class="text-gray-600">•</span>
+                                <span class="text-gray-500 text-sm">5 days ago</span>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl md:text-3xl mb-2 group-hover:text-brand-neon transition-colors">Ep. 89: MLB Opening Week Overreactions</h3>
+                            <p class="text-gray-400 line-clamp-2">The Mets and Yankees are back. We break down the first week of the season and make bold predictions.</p>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-500">
+                            <span class="flex items-center gap-2 text-sm">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                1:05:00
+                            </span>
+                            <button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <button class="glass-panel px-8 py-4 rounded-full font-bold hover:bg-white hover:text-black transition-all inline-flex items-center gap-2">
+                    View All Episodes
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hosts Section -->
+    <section id="hosts" class="py-32 bg-brand-black relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="text-brand-neon font-bold tracking-widest uppercase text-sm mb-4 block">The Voices</span>
+                <h2 class="font-display font-black text-5xl md:text-7xl tracking-tighter mb-6">MEET THE<br>HOSTS</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">The personalities behind the mic. Authentic voices from the heart of Brooklyn.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Host 1 -->
+                <div class="group text-center">
+                    <div class="relative mb-6 inline-block">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-neon transition-colors p-1">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" 
+                                 alt="Host" 
+                                 class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        </div>
+                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center text-black">
+                            <i data-lucide="mic" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-1">Marcus Chen</h3>
+                    <p class="text-brand-neon text-sm font-bold tracking-wider uppercase mb-3">The Hoops History</p>
+                    <p class="text-gray-500 text-sm mb-4">Former sports writer covering the NBA for 15 years. Brooklyn native.</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Host 2 -->
+                <div class="group text-center">
+                    <div class="relative mb-6 inline-block">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-neon transition-colors p-1">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80" 
+                                 alt="Host" 
+                                 class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        </div>
+                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center text-black">
+                            <i data-lucide="mic" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-1">Sarah Williams</h3>
+                    <p class="text-brand-neon text-sm font-bold tracking-wider uppercase mb-3">Game Day</p>
+                    <p class="text-gray-500 text-sm mb-4">NFL analyst and former college athlete. Brings the heat every Sunday.</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Host 3 -->
+                <div class="group text-center">
+                    <div class="relative mb-6 inline-block">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-neon transition-colors p-1">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80" 
+                                 alt="Host" 
+                                 class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        </div>
+                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center text-black">
+                            <i data-lucide="mic" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-1">James & Mike</h3>
+                    <p class="text-brand-neon text-sm font-bold tracking-wider uppercase mb-3">In N Out</p>
+                    <p class="text-gray-500 text-sm mb-4">Dynamic duo covering all things sports with chemistry and comedy.</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Host 4 -->
+                <div class="group text-center">
+                    <div class="relative mb-6 inline-block">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-neon transition-colors p-1">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" 
+                                 alt="Host" 
+                                 class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        </div>
+                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center text-black">
+                            <i data-lucide="mic" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-1">Elena Rodriguez</h3>
+                    <p class="text-brand-neon text-sm font-bold tracking-wider uppercase mb-3">Pitch Side</p>
+                    <p class="text-gray-500 text-sm mb-4">Soccer journalist with deep connections to NYCFC and the local soccer scene.</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-32 bg-brand-dark relative overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1920&q=80" 
+                 alt="Background" 
+                 class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/95 to-brand-dark/90"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8">
+                <i data-lucide="mail" class="w-4 h-4 text-brand-neon"></i>
+                <span class="text-xs font-bold tracking-widest uppercase text-gray-300">Newsletter</span>
+            </div>
+            
+            <h2 class="font-display font-black text-5xl md:text-7xl tracking-tighter mb-6">STAY IN THE<br>LOOP</h2>
+            <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
+                Get the latest episodes, exclusive content, and behind-the-scenes access delivered straight to your inbox. No spam, just sports.
+            </p>
+
+            <form class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto mb-8" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
+                <input type="email" 
+                       placeholder="Enter your email" 
+                       class="flex-1 px-6 py-4 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-neon transition-colors">
+                <button type="submit" 
+                        class="px-8 py-4 bg-brand-neon text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2">
+                    Subscribe
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+
+            <p class="text-gray-600 text-sm">Join 50,000+ subscribers. Unsubscribe anytime.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-black border-t border-white/10 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-brand-neon rounded-full flex items-center justify-center">
+                            <span class="text-black font-black text-xl font-display">W</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-display font-bold text-2xl tracking-tighter">WAVE</span>
+                            <span class="text-[10px] tracking-[0.3em] text-gray-400 uppercase">Originals</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-500 mb-6">Brooklyn's premier sports podcast network. Authentic voices, unfiltered opinions.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-brand-neon hover:text-black transition-all">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-brand-neon hover:text-black transition-all">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-brand-neon hover:text-black transition-all">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-brand-neon hover:text-black transition-all">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Shows -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">Shows</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">The Hoops History</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Game Day</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">In N Out</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">The Daily Wave</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Pitch Side</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">Company</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Advertise</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-brand-neon transition-colors">Press</a></li>
+                    </ul>
+                </div>
+
+                <!-- Listen -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">Listen On</h4>
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center gap-3 glass-panel px-4 py-3 rounded-lg hover:bg-white/10 transition-colors">
+                            <i data-lucide="podcast" class="w-5 h-5 text-brand-neon"></i>
+                            <span class="text-sm font-medium">Apple Podcasts</span>
+                        </a>
+                        <a href="#" class="flex items-center gap-3 glass-panel px-4 py-3 rounded-lg hover:bg-white/10 transition-colors">
+                            <i data-lucide="music" class="w-5 h-5 text-brand-neon"></i>
+                            <span class="text-sm font-medium">Spotify</span>
+                        </a>
+                        <a href="#" class="flex items-center gap-3 glass-panel px-4 py-3 rounded-lg hover:bg-white/10 transition-colors">
+                            <i data-lucide="radio" class="w-5 h-5 text-brand-neon"></i>
+                            <span class="text-sm font-medium">Google Podcasts</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-sm">© 2026 WAVE Originals. All rights reserved.</p>
+                <div class="flex gap-6 text-sm text-gray-600">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky Player (Hidden by default, shown when scrolling) -->
+    <div id="sticky-player" class="fixed bottom-0 left-0 right-0 bg-brand-gray/95 backdrop-blur-lg border-t border-white/10 transform translate-y-full transition-transform duration-300 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=100&q=80" 
+                 alt="Now Playing" 
+                 class="w-12 h-12 rounded-lg object-cover hidden sm:block">
+            <div class="flex-1 min-w-0">
+                <div class="text-xs text-brand-neon font-bold uppercase tracking-wider">Now Playing</div>
+                <div class="font-display font-bold truncate">The Hoops History - Ep. 234</div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="text-gray-400 hover:text-white">
+                    <i data-lucide="skip-back" class="w-5 h-5 fill-current"></i>
+                </button>
+                <button class="w-12 h-12 bg-brand-neon rounded-full flex items-center justify-center text-black hover:scale-110 transition-transform" onclick="togglePlay(this)">
+                    <i data-lucide="play" class="w-5 h-5 fill-current" id="play-icon"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i data-lucide="skip-forward" class="w-5 h-5 fill-current"></i>
+                </button>
+            </div>
+            <div class="hidden md:flex items-center gap-2 w-48">
+                <span class="text-xs text-gray-500">12:34</span>
+                <div class="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                    <div class="h-full bg-brand-neon w-1/3 rounded-full"></div>
+                </div>
+                <span class="text-xs text-gray-500">45:00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Navbar Scroll Effect
+        let lastScroll = 0;
+        const navbar = document.getElementById('navbar');
+        const stickyPlayer = document.getElementById('sticky-player');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            // Navbar background
+            if (currentScroll > 100) {
+                navbar.classList.add('bg-brand-black/90', 'backdrop-blur-lg');
+            } else {
+                navbar.classList.remove('bg-brand-black/90', 'backdrop-blur-lg');
+            }
+
+            // Show sticky player after scrolling past hero
+            if (currentScroll > window.innerHeight * 0.8) {
+                stickyPlayer.classList.remove('translate-y-full');
+            } else {
+                stickyPlayer.classList.add('translate-y-full');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Play Button Toggle
+        function togglePlay(btn) {
+            const icon = btn.querySelector('#play-icon');
+            if (icon.getAttribute('data-lucide') === 'play') {
+                icon.setAttribute('data-lucide', 'pause');
+                btn.classList.add('animate-pulse');
+            } else {
+                icon.setAttribute('data-lucide', 'play');
+                btn.classList.remove('animate-pulse');
+            }
+            lucide.createIcons();
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
